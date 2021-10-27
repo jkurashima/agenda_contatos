@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:agenda_contatos/helpers/contact_helper.dart';
 import 'package:flutter/material.dart';
 
@@ -16,12 +18,11 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    helper.getAllContacts().then((list){
+    helper.getAllContacts().then((list) {
       setState(() {
-        contacts =list;
+        contacts = list;
       });
     });
-
   }
 
   @override
@@ -34,17 +35,61 @@ class _HomePageState extends State<HomePage> {
       ),
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: () {},
         child: Icon(Icons.add),
         backgroundColor: Colors.red,
       ),
       body: ListView.builder(
           padding: EdgeInsets.all(10.0),
           itemCount: contacts.length,
-          itemBuilder: (context, index){
-
+          itemBuilder: (context, index) {
+            return _contactCard(context, index);
           }
       ),
     );
   }
+
+  Widget _contactCard(BuildContext, int index) {
+    return GestureDetector(
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.all(10.0),
+          child: Row(
+              children: <Widget>[
+                Container(
+                  width: 80.0,
+                  height: 80.0,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: contacts[index].img != null ?
+                              FileImage(File(contacts[index].img)) :
+                                AssetImage("images/person.png")
+                      ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 10.0),
+                  child: Column(
+                    children: <Widget>[
+                      Text(contacts[index].name?? "",
+                        style: TextStyle(fontSize: 22.0,
+                            fontWeight: FontWeight.bold),
+                        ),
+                      Text(contacts[index].email?? "",
+                        style: TextStyle(fontSize: 18.0),
+                        ),
+                      Text(contacts[index].phone?? "",
+                        style: TextStyle(fontSize: 18.0),
+                        )
+                    ],
+                  ),
+                )
+              ]
+          ),
+        ),
+      ),
+    );
+  }
+
 }
